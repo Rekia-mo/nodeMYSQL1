@@ -3,24 +3,19 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const pool = mysql.createPool({
-<<<<<<< HEAD
   host: process.env.MYSQL_HOST,
   user: process.env.MYSQL_USER,
   password: process.env.MYSQL_PASSWORD,
   database: process.env.MYSQL_DATABASE
-=======
-  host: '127.0.0.1',
-  user: 'root',
-  password: '',
-  database: 'notes_app'
->>>>>>> 1dfbeb804ac2442a9ef44d4a83c4c1b68530fae0
 }).promise();
 
+//GET NOTES
 async function getNotes(){
   const [rows] = await pool.query("SELECT * FROM notes");
   return rows;
 }
 
+//GET NOT BY ID
 async function getNote(id){
   const [rows] = await pool.query(`
     SELECT * 
@@ -29,4 +24,16 @@ async function getNote(id){
     `,[id]);
   return rows;
 }
-console.log( await getNote(2));
+
+//CREAT NOTE
+async function creatNote(title, contents){
+  const [rows] = await pool.query(`
+   INSERT INTO notes (title, contents)
+   VALUES (?, ?) 
+  `, [title, contents])
+
+  const id =  rows.insertId
+  return getNote(id)
+}
+//const rslt = await creatNote("123", "456");
+console.log(await getNotes());
