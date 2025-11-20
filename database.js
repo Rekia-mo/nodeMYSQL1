@@ -10,13 +10,13 @@ const pool = mysql.createPool({
 }).promise();
 
 //GET NOTES
-async function getNotes(){
+export async function getNotes(){
   const [rows] = await pool.query("SELECT * FROM notes");
   return rows;
 }
 
 //GET NOT BY ID
-async function getNote(id){
+export async function getNote(id){
   const [rows] = await pool.query(`
     SELECT * 
     FROM notes 
@@ -26,14 +26,14 @@ async function getNote(id){
 }
 
 //CREAT NOTE
-async function creatNote(title, contents){
-  const [rows] = await pool.query(`
+export async function creatNote(title, contents){
+  const result = await pool.query(`
    INSERT INTO notes (title, contents)
    VALUES (?, ?) 
   `, [title, contents])
 
-  const id =  rows.insertId
+  const id =  result[0].insertId;
   return getNote(id)
 }
 //const rslt = await creatNote("123", "456");
-console.log(await getNotes());
+//console.log(await getNotes());
